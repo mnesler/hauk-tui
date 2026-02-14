@@ -61,10 +61,12 @@ func NewModel() Model {
 
 	// Initialize chat viewport
 	chatVp := viewport.New(0, 0)
+	chatVp.Style = lipgloss.NewStyle().Background(ui.ActiveTheme.ChatBg)
 	chatVp.SetContent("")
 
 	// Initialize log viewport
 	logVp := viewport.New(0, 0)
+	logVp.Style = lipgloss.NewStyle().Background(ui.ActiveTheme.DiagramBg)
 	logVp.SetContent("Waiting for logs...")
 
 	// Initialize theme list (will be populated when shown)
