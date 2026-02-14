@@ -9,6 +9,7 @@ A chat-based TUI for generating mermaid diagrams with LLM assistance.
 - **Real-time Preview**: ASCII diagram rendering as you chat
 - **Multiple LLM Providers**: OpenCode, OpenRouter, Anthropic, GitHub Copilot
 - **Minimalist Design**: No borders, color-based panel separation
+- **Theme Switching**: 6 color themes with live preview and persistent config
 
 ## Installation
 
@@ -27,6 +28,13 @@ hauk
 - `Enter` - Send message
 - `Shift+Enter` - New line in message
 - `Ctrl+C` or `Esc` - Quit
+
+### Commands
+
+- `/theme` - Open theme selector with live preview
+  - Available themes: Catppuccin Mocha (default), Dracula, Nord, Gruvbox, Tokyo Night, GitHub Dark
+  - Use arrow keys (↑/↓) to preview themes in real-time
+  - Press `Enter` to save selection, `Esc` to cancel
 
 ## Configuration
 
