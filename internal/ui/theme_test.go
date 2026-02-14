@@ -44,7 +44,7 @@ func TestGetTheme_Invalid(t *testing.T) {
 		"invalid",
 		"nonexistent",
 		"",
-		"DRACULA",  // Case sensitive
+		"DRACULA", // Case sensitive
 		"catppuccin", // Partial name
 	}
 
