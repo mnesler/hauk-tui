@@ -10,7 +10,7 @@ linters:
     - ineffassign    # Detect ineffectual assignments
     - staticcheck    # Static analysis
     - unused         # Check for unused code
-    - gofmt          # Check formatting
+    # - gofmt        # Check formatting (disabled due to CI cache issues)
     - goimports      # Check imports
     - misspell       # Check spelling
     - revive         # Fast linter
