@@ -3,7 +3,6 @@ package logger
 import (
 	"fmt"
 	"sync"
-	"time"
 
 	"github.com/sirupsen/logrus"
 )
