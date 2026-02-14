@@ -91,7 +91,7 @@ func TestSaveAndLoad(t *testing.T) {
 	
 	// Verify file was created
 	path, _ := ConfigPath()
-	if _, err := os.Stat(path); os.IsNotExist(err) {
+	if _, statErr := os.Stat(path); os.IsNotExist(statErr) {
 		t.Fatal("Config file was not created")
 	}
 	

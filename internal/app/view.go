@@ -20,7 +20,7 @@ func (m Model) View() string {
 	if m.showThemeSelector {
 		// Render theme selector modal
 		themeSelector := m.renderThemeSelector()
-		
+
 		// Overlay the selector centered on screen
 		// The background will be the empty space around it
 		overlay := lipgloss.Place(
@@ -193,9 +193,4 @@ func (m Model) renderThemeSelector() string {
 		Height(modalHeight)
 
 	return modalStyle.Render(content)
-}
-
-// Helper to check if string contains substring
-func contains(s, substr string) bool {
-	return strings.Contains(s, substr)
 }

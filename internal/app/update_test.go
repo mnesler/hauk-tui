@@ -10,7 +10,7 @@ import (
 
 func TestNewModel(t *testing.T) {
 	m := NewModel()
-	
+
 	if m.messages == nil {
 		t.Error("NewModel() messages is nil")
 	}
@@ -237,17 +237,17 @@ func TestShowThemeSelectorModal(t *testing.T) {
 	
 	// Should populate list with themes
 	items := m.themeList.Items()
-	if len(items) != 6 {
-		t.Errorf("Theme list has %d items, want 6", len(items))
+	if len(items) != 8 {
+		t.Errorf("Theme list has %d items, want 8", len(items))
 	}
 	
 	// Verify all items are valid themeItems
 	for i, item := range items {
-		if themeItem, ok := item.(themeItem); ok {
-			if themeItem.name == "" {
+		if ti, ok := item.(themeItem); ok {
+			if ti.name == "" {
 				t.Errorf("Item %d has empty name", i)
 			}
-			if themeItem.displayName == "" {
+			if ti.displayName == "" {
 				t.Errorf("Item %d has empty displayName", i)
 			}
 		} else {

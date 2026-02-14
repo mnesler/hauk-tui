@@ -167,7 +167,7 @@ func formatThemeName(name string) string {
 		"blue-monochrome-dark": "Blue Monochrome Dark",
 		"blue-monochrome":      "Blue Monochrome",
 	}
-	
+
 	if display, ok := displayNames[name]; ok {
 		return display
 	}
@@ -193,10 +193,8 @@ func (m Model) updateThemeSelector(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.config.Theme = item.name
 				ui.SetActiveTheme(item.name)
 				
-				// Save config
-				if err := config.Save(m.config); err != nil {
-					// Handle error (could add error message to UI)
-				}
+				// Save config (silently ignore errors for now)
+				_ = config.Save(m.config)
 			}
 			m.showThemeSelector = false
 			m.input.Focus()

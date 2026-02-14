@@ -29,7 +29,6 @@ type Model struct {
 	// State
 	messages       []chat.Message
 	currentDiagram string
-	isLoading      bool
 	width          int
 	height         int
 
