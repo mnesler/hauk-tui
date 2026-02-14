@@ -1,12 +1,10 @@
 package app
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/mnesler/hauk-tui/internal/chat"
-	"github.com/mnesler/hauk-tui/internal/diagram"
 	"github.com/mnesler/hauk-tui/internal/logger"
 	"github.com/mnesler/hauk-tui/internal/ui"
 )
