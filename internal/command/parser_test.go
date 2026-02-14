@@ -94,7 +94,7 @@ func TestParseCommand(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			gotCmd, gotArgs := ParseCommand(tt.input)
-			
+
 			if gotCmd != tt.wantCmd {
 				t.Errorf("ParseCommand() gotCmd = %v, want %v", gotCmd, tt.wantCmd)
 			}

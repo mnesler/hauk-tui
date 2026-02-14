@@ -14,7 +14,7 @@ const (
 // ParseCommand detects and parses slash commands from user input
 func ParseCommand(input string) (CommandType, []string) {
 	input = strings.TrimSpace(input)
-	
+
 	// Check if it starts with a slash
 	if !strings.HasPrefix(input, "/") {
 		return CommandNone, nil

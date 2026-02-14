@@ -192,8 +192,9 @@ func (m Model) updateThemeSelector(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if item, ok := m.themeList.SelectedItem().(themeItem); ok {
 				m.config.Theme = item.name
 				ui.SetActiveTheme(item.name)
-				
+
 				// Save config (silently ignore errors for now)
+				//nolint:errcheck // Config save errors are non-critical
 				_ = config.Save(m.config)
 			}
 			m.showThemeSelector = false
