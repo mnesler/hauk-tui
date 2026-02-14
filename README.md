@@ -32,7 +32,7 @@ hauk
 ### Commands
 
 - `/theme` - Open theme selector with live preview
-  - Available themes: Catppuccin Mocha (default), Dracula, Nord, Gruvbox, Tokyo Night, GitHub Dark
+  - Available themes: Catppuccin Mocha (default), Dracula, Nord, Gruvbox, Tokyo Night, GitHub Dark, Blue Monochrome Dark, Blue Monochrome
   - Use arrow keys (↑/↓) to preview themes in real-time
   - Press `Enter` to save selection, `Esc` to cancel
 

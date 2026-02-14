@@ -123,3 +123,35 @@ var GitHubDark = &Theme{
 	AccentAgent:   lipgloss.Color("#3fb950"),
 	AccentCode:    lipgloss.Color("#d2a8ff"),
 }
+
+// BlueMonochromeDark - Trendy blue monochromatic theme with dark background
+var BlueMonochromeDark = &Theme{
+	Name:          "blue-monochrome-dark",
+	ChatBg:        lipgloss.Color("#0041C7"), // Crayola's Absolute Zero (darkest)
+	DiagramBg:     lipgloss.Color("#0160C9"), // True Blue (darker)
+	UserMsgBg:     lipgloss.Color("#0D85D8"), // Blue Cola (medium)
+	AgentMsgBg:    lipgloss.Color("#0160C9"), // True Blue (darker)
+	InputBg:       lipgloss.Color("#0041C7"), // Crayola's Absolute Zero (darkest)
+	TextPrimary:   lipgloss.Color("#3ACBE8"), // Picton Blue (brightest)
+	TextSecondary: lipgloss.Color("#1CA3DE"), // Battery Charged Blue (bright)
+	TextMuted:     lipgloss.Color("#0D85D8"), // Blue Cola (medium)
+	AccentUser:    lipgloss.Color("#3ACBE8"), // Picton Blue (brightest)
+	AccentAgent:   lipgloss.Color("#1CA3DE"), // Battery Charged Blue (bright)
+	AccentCode:    lipgloss.Color("#0D85D8"), // Blue Cola (medium)
+}
+
+// BlueMonochrome - Trendy blue monochromatic theme with balanced contrast
+var BlueMonochrome = &Theme{
+	Name:          "blue-monochrome",
+	ChatBg:        lipgloss.Color("#0160C9"), // True Blue (darker)
+	DiagramBg:     lipgloss.Color("#0D85D8"), // Blue Cola (medium)
+	UserMsgBg:     lipgloss.Color("#1CA3DE"), // Battery Charged Blue (bright)
+	AgentMsgBg:    lipgloss.Color("#0D85D8"), // Blue Cola (medium)
+	InputBg:       lipgloss.Color("#0160C9"), // True Blue (darker)
+	TextPrimary:   lipgloss.Color("#FFFFFF"), // White (maximum readability)
+	TextSecondary: lipgloss.Color("#3ACBE8"), // Picton Blue (brightest)
+	TextMuted:     lipgloss.Color("#0041C7"), // Crayola's Absolute Zero (darkest)
+	AccentUser:    lipgloss.Color("#3ACBE8"), // Picton Blue (brightest)
+	AccentAgent:   lipgloss.Color("#1CA3DE"), // Battery Charged Blue (bright)
+	AccentCode:    lipgloss.Color("#0D85D8"), // Blue Cola (medium)
+}

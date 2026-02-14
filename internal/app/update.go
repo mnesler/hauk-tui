@@ -158,12 +158,14 @@ func (m Model) showThemeSelectorModal() Model {
 func formatThemeName(name string) string {
 	// Map of theme keys to display names
 	displayNames := map[string]string{
-		"catppuccin-mocha": "Catppuccin Mocha",
-		"dracula":          "Dracula",
-		"nord":             "Nord",
-		"gruvbox":          "Gruvbox",
-		"tokyo-night":      "Tokyo Night",
-		"github-dark":      "GitHub Dark",
+		"catppuccin-mocha":     "Catppuccin Mocha",
+		"dracula":              "Dracula",
+		"nord":                 "Nord",
+		"gruvbox":              "Gruvbox",
+		"tokyo-night":          "Tokyo Night",
+		"github-dark":          "GitHub Dark",
+		"blue-monochrome-dark": "Blue Monochrome Dark",
+		"blue-monochrome":      "Blue Monochrome",
 	}
 	
 	if display, ok := displayNames[name]; ok {

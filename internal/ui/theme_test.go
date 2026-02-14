@@ -16,6 +16,8 @@ func TestGetTheme_Valid(t *testing.T) {
 		{"gruvbox", "gruvbox", false},
 		{"tokyo-night", "tokyo-night", false},
 		{"github-dark", "github-dark", false},
+		{"blue-monochrome-dark", "blue-monochrome-dark", false},
+		{"blue-monochrome", "blue-monochrome", false},
 	}
 
 	for _, tt := range tests {
@@ -59,18 +61,20 @@ func TestGetTheme_Invalid(t *testing.T) {
 func TestGetAvailableThemes(t *testing.T) {
 	themes := GetAvailableThemes()
 	
-	if len(themes) != 6 {
-		t.Errorf("GetAvailableThemes() returned %d themes, want 6", len(themes))
+	if len(themes) != 8 {
+		t.Errorf("GetAvailableThemes() returned %d themes, want 8", len(themes))
 	}
 	
 	// Check all expected themes are present
 	expected := map[string]bool{
-		"catppuccin-mocha": false,
-		"dracula":          false,
-		"nord":             false,
-		"gruvbox":          false,
-		"tokyo-night":      false,
-		"github-dark":      false,
+		"catppuccin-mocha":     false,
+		"dracula":              false,
+		"nord":                 false,
+		"gruvbox":              false,
+		"tokyo-night":          false,
+		"github-dark":          false,
+		"blue-monochrome-dark": false,
+		"blue-monochrome":      false,
 	}
 	
 	for _, name := range themes {
@@ -112,6 +116,8 @@ func TestSetActiveTheme_Valid(t *testing.T) {
 		"gruvbox",
 		"tokyo-night",
 		"github-dark",
+		"blue-monochrome-dark",
+		"blue-monochrome",
 	}
 
 	for _, themeName := range tests {

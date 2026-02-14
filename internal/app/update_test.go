@@ -196,6 +196,8 @@ func TestFormatThemeName(t *testing.T) {
 		{"gruvbox", "Gruvbox"},
 		{"tokyo-night", "Tokyo Night"},
 		{"github-dark", "GitHub Dark"},
+		{"blue-monochrome-dark", "Blue Monochrome Dark"},
+		{"blue-monochrome", "Blue Monochrome"},
 		{"unknown", "unknown"}, // Fallback
 	}
 

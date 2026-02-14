@@ -4,12 +4,14 @@ import "sort"
 
 // AvailableThemes maps theme names to their definitions
 var AvailableThemes = map[string]*Theme{
-	"catppuccin-mocha": CatppuccinMocha,
-	"dracula":          Dracula,
-	"nord":             Nord,
-	"gruvbox":          Gruvbox,
-	"tokyo-night":      TokyoNight,
-	"github-dark":      GitHubDark,
+	"catppuccin-mocha":     CatppuccinMocha,
+	"dracula":              Dracula,
+	"nord":                 Nord,
+	"gruvbox":              Gruvbox,
+	"tokyo-night":          TokyoNight,
+	"github-dark":          GitHubDark,
+	"blue-monochrome-dark": BlueMonochromeDark,
+	"blue-monochrome":      BlueMonochrome,
 }
 
 // GetTheme returns a theme by name, or nil if not found
