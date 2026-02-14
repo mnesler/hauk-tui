@@ -1,8 +1,12 @@
 package app
 
 import (
+	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/mnesler/hauk-tui/internal/chat"
+	"github.com/mnesler/hauk-tui/internal/command"
+	"github.com/mnesler/hauk-tui/internal/config"
+	"github.com/mnesler/hauk-tui/internal/ui"
 )
 
 // Message types
@@ -29,6 +33,11 @@ type (
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
 
+	// If theme selector is active, handle its input first
+	if m.showThemeSelector {
+		return m.updateThemeSelector(msg)
+	}
+
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.Type {
@@ -36,7 +45,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 
 		case tea.KeyEnter:
-			// Check if Shift is pressed using modifiers
+			// Check if Alt is pressed
 			if msg.Alt {
 				// Alt+Enter: add newline
 				m.input.SetValue(m.input.Value() + "\n")
@@ -44,12 +53,20 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Enter: send message
 				content := m.input.Value()
 				if content != "" {
-					// Add user message
-					m.messages = append(m.messages, chat.NewMessage(chat.RoleUser, content))
-					m.input.SetValue("")
+					// Check if it's a slash command
+					cmdType, _ := command.ParseCommand(content)
+					if cmdType == command.CommandTheme {
+						// Show theme selector
+						m = m.showThemeSelectorModal()
+						return m, nil
+					} else if cmdType == command.CommandNone {
+						// Add user message
+						m.messages = append(m.messages, chat.NewMessage(chat.RoleUser, content))
+						m.input.SetValue("")
 
-					// Simulate agent response (will be replaced with real LLM call)
-					cmds = append(cmds, m.simulateAgentResponse())
+						// Simulate agent response (will be replaced with real LLM call)
+						cmds = append(cmds, m.simulateAgentResponse())
+					}
 				}
 			}
 		}
@@ -65,6 +82,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// Update viewport size
 		m.chatViewport.Width = m.chatWidth - 2
 		m.chatViewport.Height = m.height - 4
+
+		// Update theme list size
+		m.themeList.SetSize(40, 12)
 
 	case AgentResponseMsg:
 		// Add agent message
@@ -100,4 +120,79 @@ func (m Model) simulateAgentResponse() tea.Cmd {
 			Diagram: "graph TD\n    A[Start] --> B{Is it working?}\n    B -->|Yes| C[Great!]\n    B -->|No| D[Debug]\n    D --> B",
 		}
 	}
+}
+
+// showThemeSelectorModal shows the theme selector
+func (m Model) showThemeSelectorModal() Model {
+	// Get all available themes
+	themes := ui.GetAvailableThemes()
+
+	// Create list items
+	items := make([]list.Item, len(themes))
+	for i, name := range themes {
+		theme := ui.GetTheme(name)
+		items[i] = themeItem{
+			name:        name,
+			displayName: theme.Name,
+		}
+	}
+
+	// Update theme list
+	m.themeList.SetItems(items)
+	m.themeList.SetSize(40, 12)
+
+	// Save current theme and show selector
+	m.savedTheme = m.config.Theme
+	m.showThemeSelector = true
+	m.input.Blur()
+
+	return m
+}
+
+// updateThemeSelector handles input when theme selector is active
+func (m Model) updateThemeSelector(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.Type {
+		case tea.KeyEsc:
+			// Cancel and revert to saved theme
+			ui.SetActiveTheme(m.savedTheme)
+			m.showThemeSelector = false
+			m.input.Focus()
+			m.input.SetValue("")
+			return m, nil
+
+		case tea.KeyEnter:
+			// Apply selected theme
+			if item, ok := m.themeList.SelectedItem().(themeItem); ok {
+				m.config.Theme = item.name
+				ui.SetActiveTheme(item.name)
+				
+				// Save config
+				if err := config.Save(m.config); err != nil {
+					// Handle error (could add error message to UI)
+				}
+			}
+			m.showThemeSelector = false
+			m.input.Focus()
+			m.input.SetValue("")
+			return m, nil
+
+		case tea.KeyUp, tea.KeyDown:
+			// Update list and apply live preview
+			var cmd tea.Cmd
+			m.themeList, cmd = m.themeList.Update(msg)
+			
+			// Apply theme preview
+			if item, ok := m.themeList.SelectedItem().(themeItem); ok {
+				ui.SetActiveTheme(item.name)
+			}
+			return m, cmd
+		}
+	}
+
+	// Update list for other keys
+	var cmd tea.Cmd
+	m.themeList, cmd = m.themeList.Update(msg)
+	return m, cmd
 }

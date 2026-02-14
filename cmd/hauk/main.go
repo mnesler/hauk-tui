@@ -6,9 +6,18 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/mnesler/hauk-tui/internal/app"
+	"github.com/mnesler/hauk-tui/internal/config"
+	"github.com/mnesler/hauk-tui/internal/ui"
 )
 
 func main() {
+	// Load config and set initial theme
+	cfg, err := config.Load()
+	if err != nil {
+		cfg = config.DefaultConfig()
+	}
+	ui.SetActiveTheme(cfg.Theme)
+
 	// Create the initial model
 	m := app.NewModel()
 

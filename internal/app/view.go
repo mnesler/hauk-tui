@@ -16,6 +16,26 @@ func (m Model) View() string {
 		return "Loading..."
 	}
 
+	// If theme selector is shown, render it over the main view
+	if m.showThemeSelector {
+		mainView := m.renderMainView()
+		themeSelector := m.renderThemeSelector()
+		return lipgloss.Place(
+			m.width,
+			m.height,
+			lipgloss.Center,
+			lipgloss.Center,
+			themeSelector,
+			lipgloss.WithWhitespaceChars(" "),
+			lipgloss.WithWhitespaceForeground(lipgloss.Color("0")),
+		) + "\n" + mainView
+	}
+
+	return m.renderMainView()
+}
+
+// renderMainView renders the main application view
+func (m Model) renderMainView() string {
 	// Render chat panel (left 50%)
 	chatPanel := m.renderChatPanel()
 
@@ -45,11 +65,7 @@ func (m Model) renderChatPanel() string {
 	var messages []string
 
 	// Header
-	header := lipgloss.NewStyle().
-		Background(ui.ChatBg).
-		Foreground(ui.TextPrimary).
-		Bold(true).
-		Padding(0, 2).
+	header := ui.GetHeaderStyle(ui.ActiveTheme.ChatBg).
 		Render("Chat")
 	messages = append(messages, header)
 
@@ -66,9 +82,7 @@ func (m Model) renderChatPanel() string {
 	)
 
 	// Apply panel styling
-	return ui.ChatPanelStyle.
-		Width(m.chatWidth).
-		Height(m.height - 3).
+	return ui.GetChatPanelStyle(m.chatWidth, m.height-3).
 		Render(chatContent)
 }
 
@@ -83,10 +97,10 @@ func (m Model) renderMessage(msg chat.Message) string {
 
 	switch msg.Role {
 	case chat.RoleUser:
-		style = ui.UserMsgStyle.Width(m.chatWidth - 4)
+		style = ui.GetUserMsgStyle(m.chatWidth - 4)
 		prefix = fmt.Sprintf("[%s] You:", timestamp)
 	case chat.RoleAgent:
-		style = ui.AgentMsgStyle.Width(m.chatWidth - 4)
+		style = ui.GetAgentMsgStyle(m.chatWidth - 4)
 		prefix = fmt.Sprintf("[%s] Agent:", timestamp)
 	}
 
@@ -100,11 +114,7 @@ func (m Model) renderDiagramPanel() string {
 	var content []string
 
 	// Header
-	header := lipgloss.NewStyle().
-		Background(ui.DiagramBg).
-		Foreground(ui.TextPrimary).
-		Bold(true).
-		Padding(0, 2).
+	header := ui.GetHeaderStyle(ui.ActiveTheme.DiagramBg).
 		Render("Diagram Preview")
 	content = append(content, header)
 
@@ -123,8 +133,7 @@ func (m Model) renderDiagramPanel() string {
 	}
 
 	// Style the diagram content
-	diagramStyled := lipgloss.NewStyle().
-		Foreground(ui.TextSecondary).
+	diagramStyled := ui.GetTextSecondaryStyle().
 		Padding(1, 2).
 		Render(diagramContent)
 
@@ -137,9 +146,7 @@ func (m Model) renderDiagramPanel() string {
 	)
 
 	// Apply panel styling
-	return ui.DiagramPanelStyle.
-		Width(m.diagramWidth).
-		Height(m.height - 3).
+	return ui.GetDiagramPanelStyle(m.diagramWidth, m.height-3).
 		Render(panelContent)
 }
 
@@ -147,9 +154,42 @@ func (m Model) renderDiagramPanel() string {
 func (m Model) renderInputBar() string {
 	inputView := m.input.View()
 
-	return ui.InputStyle.
-		Width(m.width).
+	return ui.GetInputStyle(m.width).
 		Render("> " + inputView)
+}
+
+// renderThemeSelector renders the theme selector modal
+func (m Model) renderThemeSelector() string {
+	// Modal dimensions
+	modalWidth := 50
+	modalHeight := 20
+
+	// Instructions
+	instructions := ui.GetTextMutedStyle().
+		Render("↑/↓: navigate • Enter: select • Esc: cancel")
+
+	// List view
+	listView := m.themeList.View()
+
+	// Combine instructions and list
+	content := lipgloss.JoinVertical(
+		lipgloss.Left,
+		listView,
+		"",
+		instructions,
+	)
+
+	// Modal style
+	modalStyle := lipgloss.NewStyle().
+		Background(ui.ActiveTheme.ChatBg).
+		Foreground(ui.ActiveTheme.TextPrimary).
+		Border(lipgloss.RoundedBorder()).
+		BorderForeground(ui.ActiveTheme.AccentUser).
+		Padding(1, 2).
+		Width(modalWidth).
+		Height(modalHeight)
+
+	return modalStyle.Render(content)
 }
 
 // Helper to check if string contains substring

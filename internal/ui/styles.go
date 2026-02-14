@@ -2,62 +2,77 @@ package ui
 
 import "github.com/charmbracelet/lipgloss"
 
-// Color scheme - Catppuccin Mocha (soft, similar tones)
-var (
-	// Background colors (subtle distinction between panes)
-	ChatBg    = lipgloss.Color("#1e1e2e") // Deep purple-gray
-	DiagramBg = lipgloss.Color("#252538") // Slightly lighter purple
-
-	// Message colors
-	UserMsgBg  = lipgloss.Color("#2a2a3c") // Subtle highlight
-	AgentMsgBg = lipgloss.Color("#313244") // Different subtle highlight
-	InputBg    = lipgloss.Color("#1e1e2e") // Match chat panel
-
-	// Text colors
-	TextPrimary   = lipgloss.Color("#cdd6f4") // Soft white
-	TextSecondary = lipgloss.Color("#a6adc8") // Muted gray
-	TextMuted     = lipgloss.Color("#6c7086") // Placeholder text
-
-	// Accent colors (minimal usage)
-	AccentUser  = lipgloss.Color("#89b4fa") // Blue for user
-	AccentAgent = lipgloss.Color("#a6e3a1") // Green for agent
-	AccentCode  = lipgloss.Color("#f5c2e7") // Pink for code elements
-)
-
-// Styles
-var (
-	// User message style
-	UserMsgStyle = lipgloss.NewStyle().
-		Background(UserMsgBg).
-		Foreground(TextPrimary).
+// GetUserMsgStyle returns the style for user messages
+func GetUserMsgStyle(width int) lipgloss.Style {
+	return lipgloss.NewStyle().
+		Background(ActiveTheme.UserMsgBg).
+		Foreground(ActiveTheme.TextPrimary).
 		Padding(1, 2).
-		MarginBottom(1)
+		MarginBottom(1).
+		Width(width)
+}
 
-	// Agent message style
-	AgentMsgStyle = lipgloss.NewStyle().
-		Background(AgentMsgBg).
-		Foreground(TextPrimary).
+// GetAgentMsgStyle returns the style for agent messages
+func GetAgentMsgStyle(width int) lipgloss.Style {
+	return lipgloss.NewStyle().
+		Background(ActiveTheme.AgentMsgBg).
+		Foreground(ActiveTheme.TextPrimary).
 		Padding(1, 2).
-		MarginBottom(1)
+		MarginBottom(1).
+		Width(width)
+}
 
-	// Code block style
-	CodeStyle = lipgloss.NewStyle().
-		Foreground(AccentCode).
+// GetCodeStyle returns the style for code blocks
+func GetCodeStyle() lipgloss.Style {
+	return lipgloss.NewStyle().
+		Foreground(ActiveTheme.AccentCode).
 		MarginLeft(2)
+}
 
-	// Chat panel style
-	ChatPanelStyle = lipgloss.NewStyle().
-		Background(ChatBg).
-		Padding(1)
+// GetChatPanelStyle returns the style for the chat panel
+func GetChatPanelStyle(width, height int) lipgloss.Style {
+	return lipgloss.NewStyle().
+		Background(ActiveTheme.ChatBg).
+		Padding(1).
+		Width(width).
+		Height(height)
+}
 
-	// Diagram panel style
-	DiagramPanelStyle = lipgloss.NewStyle().
-		Background(DiagramBg).
-		Padding(1)
+// GetDiagramPanelStyle returns the style for the diagram panel
+func GetDiagramPanelStyle(width, height int) lipgloss.Style {
+	return lipgloss.NewStyle().
+		Background(ActiveTheme.DiagramBg).
+		Padding(1).
+		Width(width).
+		Height(height)
+}
 
-	// Input style
-	InputStyle = lipgloss.NewStyle().
-		Background(InputBg).
-		Foreground(TextPrimary).
-		Padding(1, 2)
-)
+// GetInputStyle returns the style for the input bar
+func GetInputStyle(width int) lipgloss.Style {
+	return lipgloss.NewStyle().
+		Background(ActiveTheme.InputBg).
+		Foreground(ActiveTheme.TextPrimary).
+		Padding(1, 2).
+		Width(width)
+}
+
+// GetHeaderStyle returns the style for panel headers
+func GetHeaderStyle(bg lipgloss.Color) lipgloss.Style {
+	return lipgloss.NewStyle().
+		Background(bg).
+		Foreground(ActiveTheme.TextPrimary).
+		Bold(true).
+		Padding(0, 2)
+}
+
+// GetTextSecondaryStyle returns the style for secondary text
+func GetTextSecondaryStyle() lipgloss.Style {
+	return lipgloss.NewStyle().
+		Foreground(ActiveTheme.TextSecondary)
+}
+
+// GetTextMutedStyle returns the style for muted text
+func GetTextMutedStyle() lipgloss.Style {
+	return lipgloss.NewStyle().
+		Foreground(ActiveTheme.TextMuted)
+}
