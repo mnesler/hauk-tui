@@ -11,7 +11,7 @@ linters:
     - staticcheck    # Static analysis
     - unused         # Check for unused code
     # - gofmt        # Check formatting (disabled due to CI cache issues)
-    - goimports      # Check imports
+    # - goimports    # Check imports (disabled due to CI cache issues)
     - misspell       # Check spelling
     - revive         # Fast linter
     - typecheck      # Type checking
