@@ -23,15 +23,15 @@ func TestGetTheme_Valid(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			theme := GetTheme(tt.themeName)
-			
+
 			if tt.wantNil && theme != nil {
 				t.Errorf("GetTheme(%q) = %v, want nil", tt.themeName, theme)
 			}
-			
+
 			if !tt.wantNil && theme == nil {
 				t.Errorf("GetTheme(%q) = nil, want non-nil", tt.themeName)
 			}
-			
+
 			if theme != nil && theme.Name != tt.themeName {
 				t.Errorf("GetTheme(%q).Name = %q, want %q", tt.themeName, theme.Name, tt.themeName)
 			}
@@ -60,11 +60,11 @@ func TestGetTheme_Invalid(t *testing.T) {
 
 func TestGetAvailableThemes(t *testing.T) {
 	themes := GetAvailableThemes()
-	
+
 	if len(themes) != 8 {
 		t.Errorf("GetAvailableThemes() returned %d themes, want 8", len(themes))
 	}
-	
+
 	// Check all expected themes are present
 	expected := map[string]bool{
 		"catppuccin-mocha":     false,
@@ -76,7 +76,7 @@ func TestGetAvailableThemes(t *testing.T) {
 		"blue-monochrome-dark": false,
 		"blue-monochrome":      false,
 	}
-	
+
 	for _, name := range themes {
 		if _, ok := expected[name]; ok {
 			expected[name] = true
@@ -84,7 +84,7 @@ func TestGetAvailableThemes(t *testing.T) {
 			t.Errorf("Unexpected theme in list: %q", name)
 		}
 	}
-	
+
 	// Check all expected themes were found
 	for name, found := range expected {
 		if !found {
@@ -95,7 +95,7 @@ func TestGetAvailableThemes(t *testing.T) {
 
 func TestGetAvailableThemes_Sorted(t *testing.T) {
 	themes := GetAvailableThemes()
-	
+
 	// Check if sorted
 	for i := 1; i < len(themes); i++ {
 		if themes[i-1] > themes[i] {
@@ -108,7 +108,7 @@ func TestSetActiveTheme_Valid(t *testing.T) {
 	// Save original theme
 	originalTheme := ActiveTheme
 	defer func() { ActiveTheme = originalTheme }()
-	
+
 	tests := []string{
 		"catppuccin-mocha",
 		"dracula",
@@ -123,15 +123,15 @@ func TestSetActiveTheme_Valid(t *testing.T) {
 	for _, themeName := range tests {
 		t.Run(themeName, func(t *testing.T) {
 			ok := SetActiveTheme(themeName)
-			
+
 			if !ok {
 				t.Errorf("SetActiveTheme(%q) = false, want true", themeName)
 			}
-			
+
 			if ActiveTheme == nil {
 				t.Fatal("ActiveTheme is nil after SetActiveTheme")
 			}
-			
+
 			if ActiveTheme.Name != themeName {
 				t.Errorf("ActiveTheme.Name = %q, want %q", ActiveTheme.Name, themeName)
 			}
@@ -143,7 +143,7 @@ func TestSetActiveTheme_Invalid(t *testing.T) {
 	// Save original theme
 	originalTheme := ActiveTheme
 	defer func() { ActiveTheme = originalTheme }()
-	
+
 	tests := []string{
 		"invalid",
 		"nonexistent",
@@ -153,11 +153,11 @@ func TestSetActiveTheme_Invalid(t *testing.T) {
 	for _, themeName := range tests {
 		t.Run(themeName, func(t *testing.T) {
 			ok := SetActiveTheme(themeName)
-			
+
 			if ok {
 				t.Errorf("SetActiveTheme(%q) = true, want false for invalid theme", themeName)
 			}
-			
+
 			// ActiveTheme should remain unchanged
 			if ActiveTheme != originalTheme {
 				t.Error("ActiveTheme changed after invalid SetActiveTheme")
@@ -170,18 +170,18 @@ func TestTheme_Apply(t *testing.T) {
 	// Save original theme
 	originalTheme := ActiveTheme
 	defer func() { ActiveTheme = originalTheme }()
-	
+
 	theme := GetTheme("dracula")
 	if theme == nil {
 		t.Fatal("Could not get dracula theme")
 	}
-	
+
 	theme.Apply()
-	
+
 	if ActiveTheme != theme {
 		t.Error("Theme.Apply() did not set ActiveTheme")
 	}
-	
+
 	if ActiveTheme.Name != "dracula" {
 		t.Errorf("After Apply(), ActiveTheme.Name = %q, want %q", ActiveTheme.Name, "dracula")
 	}
@@ -190,14 +190,14 @@ func TestTheme_Apply(t *testing.T) {
 func TestTheme_HasAllColors(t *testing.T) {
 	// Test that all themes have all required color fields set
 	themes := GetAvailableThemes()
-	
+
 	for _, name := range themes {
 		t.Run(name, func(t *testing.T) {
 			theme := GetTheme(name)
 			if theme == nil {
 				t.Fatalf("GetTheme(%q) returned nil", name)
 			}
-			
+
 			// Check all color fields are non-empty
 			if theme.ChatBg == "" {
 				t.Error("ChatBg is empty")
@@ -239,12 +239,12 @@ func TestTheme_HasAllColors(t *testing.T) {
 func TestGetThemeNames(t *testing.T) {
 	names := GetThemeNames()
 	available := GetAvailableThemes()
-	
+
 	// Should return same list
 	if len(names) != len(available) {
 		t.Errorf("GetThemeNames() length = %d, GetAvailableThemes() length = %d", len(names), len(available))
 	}
-	
+
 	for i := range names {
 		if names[i] != available[i] {
 			t.Errorf("GetThemeNames()[%d] = %q, GetAvailableThemes()[%d] = %q", i, names[i], i, available[i])
@@ -261,7 +261,7 @@ func BenchmarkGetTheme(b *testing.B) {
 
 func BenchmarkSetActiveTheme(b *testing.B) {
 	themes := []string{"catppuccin-mocha", "dracula", "nord"}
-	
+
 	for i := 0; i < b.N; i++ {
 		SetActiveTheme(themes[i%len(themes)])
 	}

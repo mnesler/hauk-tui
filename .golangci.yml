@@ -26,6 +26,8 @@ linters-settings:
   
   govet:
     enable-all: true
+    disable:
+      - fieldalignment  # Too pedantic for this project
   
   revive:
     rules:

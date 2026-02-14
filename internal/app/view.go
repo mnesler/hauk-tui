@@ -29,7 +29,7 @@ func (m Model) View() string {
 			lipgloss.Center,
 			themeSelector,
 		)
-		
+
 		return overlay
 	}
 

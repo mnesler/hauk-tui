@@ -206,7 +206,7 @@ func (m Model) updateThemeSelector(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// Update list and apply live preview
 			var cmd tea.Cmd
 			m.themeList, cmd = m.themeList.Update(msg)
-			
+
 			// Apply theme preview
 			if item, ok := m.themeList.SelectedItem().(themeItem); ok {
 				ui.SetActiveTheme(item.name)

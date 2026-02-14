@@ -19,17 +19,17 @@ func ParseCommand(input string) (CommandType, []string) {
 	if !strings.HasPrefix(input, "/") {
 		return CommandNone, nil
 	}
-	
+
 	// Split command and arguments
 	parts := strings.Fields(input)
 	if len(parts) == 0 {
 		return CommandNone, nil
 	}
-	
+
 	// Get command (without the slash)
 	cmd := strings.ToLower(strings.TrimPrefix(parts[0], "/"))
 	args := parts[1:]
-	
+
 	// Match command
 	switch cmd {
 	case "theme":

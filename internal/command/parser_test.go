@@ -98,13 +98,13 @@ func TestParseCommand(t *testing.T) {
 			if gotCmd != tt.wantCmd {
 				t.Errorf("ParseCommand() gotCmd = %v, want %v", gotCmd, tt.wantCmd)
 			}
-			
+
 			// Compare args
 			if len(gotArgs) != len(tt.wantArgs) {
 				t.Errorf("ParseCommand() gotArgs length = %v, want %v", len(gotArgs), len(tt.wantArgs))
 				return
 			}
-			
+
 			for i := range gotArgs {
 				if gotArgs[i] != tt.wantArgs[i] {
 					t.Errorf("ParseCommand() gotArgs[%d] = %v, want %v", i, gotArgs[i], tt.wantArgs[i])
@@ -154,7 +154,7 @@ func BenchmarkParseCommand(b *testing.B) {
 		"regular message",
 		"/invalid",
 	}
-	
+
 	for _, input := range inputs {
 		b.Run(input, func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
