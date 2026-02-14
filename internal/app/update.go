@@ -56,7 +56,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					// Check if it's a slash command
 					cmdType, _ := command.ParseCommand(content)
 					if cmdType == command.CommandTheme {
-						// Show theme selector
+						// Clear input and show theme selector
+						m.input.SetValue("")
 						m = m.showThemeSelectorModal()
 						return m, nil
 					} else if cmdType == command.CommandNone {
@@ -128,13 +129,17 @@ func (m Model) showThemeSelectorModal() Model {
 	themes := ui.GetAvailableThemes()
 
 	// Create list items
-	items := make([]list.Item, len(themes))
-	for i, name := range themes {
+	items := make([]list.Item, 0, len(themes))
+	for _, name := range themes {
 		theme := ui.GetTheme(name)
-		items[i] = themeItem{
-			name:        name,
-			displayName: theme.Name,
+		if theme == nil {
+			// Skip invalid themes
+			continue
 		}
+		items = append(items, themeItem{
+			name:        name,
+			displayName: formatThemeName(theme.Name),
+		})
 	}
 
 	// Update theme list
@@ -147,6 +152,24 @@ func (m Model) showThemeSelectorModal() Model {
 	m.input.Blur()
 
 	return m
+}
+
+// formatThemeName converts theme key to display name
+func formatThemeName(name string) string {
+	// Map of theme keys to display names
+	displayNames := map[string]string{
+		"catppuccin-mocha": "Catppuccin Mocha",
+		"dracula":          "Dracula",
+		"nord":             "Nord",
+		"gruvbox":          "Gruvbox",
+		"tokyo-night":      "Tokyo Night",
+		"github-dark":      "GitHub Dark",
+	}
+	
+	if display, ok := displayNames[name]; ok {
+		return display
+	}
+	return name // Fallback to original name
 }
 
 // updateThemeSelector handles input when theme selector is active

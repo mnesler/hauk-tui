@@ -18,17 +18,20 @@ func (m Model) View() string {
 
 	// If theme selector is shown, render it over the main view
 	if m.showThemeSelector {
-		mainView := m.renderMainView()
+		// Render theme selector modal
 		themeSelector := m.renderThemeSelector()
-		return lipgloss.Place(
+		
+		// Overlay the selector centered on screen
+		// The background will be the empty space around it
+		overlay := lipgloss.Place(
 			m.width,
 			m.height,
 			lipgloss.Center,
 			lipgloss.Center,
 			themeSelector,
-			lipgloss.WithWhitespaceChars(" "),
-			lipgloss.WithWhitespaceForeground(lipgloss.Color("0")),
-		) + "\n" + mainView
+		)
+		
+		return overlay
 	}
 
 	return m.renderMainView()

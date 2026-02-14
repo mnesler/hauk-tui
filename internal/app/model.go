@@ -62,8 +62,11 @@ func NewModel() Model {
 	vp.SetContent("")
 
 	// Initialize theme list (will be populated when shown)
-	themeList := list.New([]list.Item{}, list.NewDefaultDelegate(), 0, 0)
+	themeList := list.New([]list.Item{}, list.NewDefaultDelegate(), 40, 12)
 	themeList.Title = "Select Theme"
+	themeList.SetShowStatusBar(false)
+	themeList.SetFilteringEnabled(false)
+	themeList.SetShowHelp(false)
 
 	return Model{
 		chatViewport:      vp,
