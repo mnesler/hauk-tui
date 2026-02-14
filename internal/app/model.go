@@ -25,6 +25,7 @@ func (t themeItem) Description() string { return "" }
 type Model struct {
 	// UI Components
 	chatViewport viewport.Model
+	logViewport  viewport.Model
 	input        textinput.Model
 	themeList    list.Model
 
@@ -59,8 +60,12 @@ func NewModel() Model {
 	input.Focus()
 
 	// Initialize chat viewport
-	vp := viewport.New(0, 0)
-	vp.SetContent("")
+	chatVp := viewport.New(0, 0)
+	chatVp.SetContent("")
+
+	// Initialize log viewport
+	logVp := viewport.New(0, 0)
+	logVp.SetContent("Waiting for logs...")
 
 	// Initialize theme list (will be populated when shown)
 	themeList := list.New([]list.Item{}, newThemeDelegate(), 40, 12)
@@ -76,7 +81,8 @@ func NewModel() Model {
 		Padding(0, 1)
 
 	return Model{
-		chatViewport:      vp,
+		chatViewport:      chatVp,
+		logViewport:       logVp,
 		input:             input,
 		themeList:         themeList,
 		messages:          make([]chat.Message, 0),

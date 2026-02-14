@@ -2,10 +2,12 @@ package app
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/mnesler/hauk-tui/internal/chat"
 	"github.com/mnesler/hauk-tui/internal/diagram"
+	"github.com/mnesler/hauk-tui/internal/logger"
 	"github.com/mnesler/hauk-tui/internal/ui"
 )
 
@@ -41,14 +43,14 @@ func (m Model) renderMainView() string {
 	// Render chat panel (left 50%)
 	chatPanel := m.renderChatPanel()
 
-	// Render diagram panel (right 50%)
-	diagramPanel := m.renderDiagramPanel()
+	// Render log panel (right 50%)
+	logPanel := m.renderLogPanel()
 
 	// Join panels horizontally
 	content := lipgloss.JoinHorizontal(
 		lipgloss.Top,
 		chatPanel,
-		diagramPanel,
+		logPanel,
 	)
 
 	// Add input bar at bottom
@@ -71,10 +73,19 @@ func (m Model) renderChatPanel() string {
 		Render("Chat")
 	messages = append(messages, header)
 
-	// Messages
-	for _, msg := range m.messages {
-		rendered := m.renderMessage(msg)
-		messages = append(messages, rendered)
+	// Check if there are any messages
+	if len(m.messages) == 0 {
+		// Show welcome message
+		welcome := ui.GetTextMutedStyle().
+			Padding(2).
+			Render("Welcome to Hauk-TUI!\n\nType a message to start chatting with the agent.\nUse /theme to change themes.")
+		messages = append(messages, welcome)
+	} else {
+		// Render messages
+		for _, msg := range m.messages {
+			rendered := m.renderMessage(msg)
+			messages = append(messages, rendered)
+		}
 	}
 
 	// Join all messages
@@ -83,9 +94,15 @@ func (m Model) renderChatPanel() string {
 		messages...,
 	)
 
+	// Set viewport content
+	m.chatViewport.SetContent(chatContent)
+
+	// Render viewport view
+	viewportView := m.chatViewport.View()
+
 	// Apply panel styling
 	return ui.GetChatPanelStyle(m.chatWidth, m.height-3).
-		Render(chatContent)
+		Render(viewportView)
 }
 
 // renderMessage renders a single chat message
@@ -111,7 +128,43 @@ func (m Model) renderMessage(msg chat.Message) string {
 	return style.Render(content)
 }
 
+// renderLogPanel renders the right panel with application logs
+func (m Model) renderLogPanel() string {
+	var content []string
+
+	// Header
+	header := ui.GetHeaderStyle(ui.ActiveTheme.DiagramBg).
+		Render("Application Logs")
+	content = append(content, header)
+
+	// Get all logs from logger
+	logs := logger.GetLogs()
+
+	// Format logs for display
+	var logContent string
+	if len(logs) == 0 {
+		logContent = ui.GetTextMutedStyle().
+			Padding(2).
+			Render("Waiting for logs...")
+	} else {
+		logContent = strings.Join(logs, "\n")
+	}
+
+	// Set viewport content
+	m.logViewport.SetContent(logContent)
+
+	// Render viewport view
+	viewportView := m.logViewport.View()
+
+	// Apply panel styling
+	return ui.GetDiagramPanelStyle(m.diagramWidth, m.height-3).
+		Render(viewportView)
+}
+
 // renderDiagramPanel renders the right panel with ASCII diagram
+// NOTE: This function is currently disabled in favor of the log panel
+// Keep this code for potential future use
+/*
 func (m Model) renderDiagramPanel() string {
 	var content []string
 
@@ -151,6 +204,7 @@ func (m Model) renderDiagramPanel() string {
 	return ui.GetDiagramPanelStyle(m.diagramWidth, m.height-3).
 		Render(panelContent)
 }
+*/
 
 // renderInputBar renders the input bar at the bottom
 func (m Model) renderInputBar() string {

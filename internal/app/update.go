@@ -6,6 +6,7 @@ import (
 	"github.com/mnesler/hauk-tui/internal/chat"
 	"github.com/mnesler/hauk-tui/internal/command"
 	"github.com/mnesler/hauk-tui/internal/config"
+	"github.com/mnesler/hauk-tui/internal/logger"
 	"github.com/mnesler/hauk-tui/internal/ui"
 )
 
@@ -42,6 +43,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.Type {
 		case tea.KeyCtrlC, tea.KeyEsc:
+			logger.Component("app").Info("User requested exit")
 			return m, tea.Quit
 
 		case tea.KeyEnter:
@@ -59,11 +61,18 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						// Clear input and show theme selector
 						m.input.SetValue("")
 						m = m.showThemeSelectorModal()
+						logger.Component("command").Info("Theme selector opened")
 						return m, nil
 					} else if cmdType == command.CommandNone {
 						// Add user message
 						m.messages = append(m.messages, chat.NewMessage(chat.RoleUser, content))
 						m.input.SetValue("")
+
+						// Auto-scroll chat viewport to bottom
+						m.chatViewport.GotoBottom()
+
+						// Log the event
+						logger.Component("chat").Infof("User sent message: %d chars", len(content))
 
 						// Simulate agent response (will be replaced with real LLM call)
 						cmds = append(cmds, m.simulateAgentResponse())
@@ -80,12 +89,19 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.chatWidth = m.width / 2
 		m.diagramWidth = m.width - m.chatWidth
 
-		// Update viewport size
+		// Update chat viewport size
 		m.chatViewport.Width = m.chatWidth - 2
 		m.chatViewport.Height = m.height - 4
 
+		// Update log viewport size
+		m.logViewport.Width = m.diagramWidth - 2
+		m.logViewport.Height = m.height - 4
+
 		// Update theme list size
 		m.themeList.SetSize(40, 12)
+
+		// Log resize event
+		logger.Component("ui").Infof("Window resized to %dx%d", m.width, m.height)
 
 	case AgentResponseMsg:
 		// Add agent message
@@ -97,6 +113,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.Diagram != "" {
 			m.currentDiagram = msg.Diagram
 		}
+
+		// Auto-scroll chat viewport to bottom
+		m.chatViewport.GotoBottom()
+
+		// Log the event
+		logger.Component("chat").Infof("Agent responded: %d chars", len(msg.Content))
 	}
 
 	// Update input
@@ -104,10 +126,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	m.input = newInput
 	cmds = append(cmds, inputCmd)
 
-	// Update viewport
-	newVp, vpCmd := m.chatViewport.Update(msg)
-	m.chatViewport = newVp
-	cmds = append(cmds, vpCmd)
+	// Update chat viewport
+	newChatVp, chatVpCmd := m.chatViewport.Update(msg)
+	m.chatViewport = newChatVp
+	cmds = append(cmds, chatVpCmd)
+
+	// Update log viewport
+	newLogVp, logVpCmd := m.logViewport.Update(msg)
+	m.logViewport = newLogVp
+	cmds = append(cmds, logVpCmd)
 
 	return m, tea.Batch(cmds...)
 }
@@ -185,6 +212,7 @@ func (m Model) updateThemeSelector(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.showThemeSelector = false
 			m.input.Focus()
 			m.input.SetValue("")
+			logger.Component("theme").Infof("Theme selector cancelled, reverted to: %s", m.savedTheme)
 			return m, nil
 
 		case tea.KeyEnter:
@@ -196,6 +224,8 @@ func (m Model) updateThemeSelector(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Save config (silently ignore errors for now)
 				//nolint:errcheck // Config save errors are non-critical
 				_ = config.Save(m.config)
+
+				logger.Component("theme").Infof("Theme changed to: %s", item.displayName)
 			}
 			m.showThemeSelector = false
 			m.input.Focus()
@@ -210,6 +240,7 @@ func (m Model) updateThemeSelector(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// Apply theme preview
 			if item, ok := m.themeList.SelectedItem().(themeItem); ok {
 				ui.SetActiveTheme(item.name)
+				logger.Component("theme").Debugf("Preview theme: %s", item.displayName)
 			}
 			return m, cmd
 		}
