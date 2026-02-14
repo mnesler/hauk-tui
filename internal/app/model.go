@@ -5,8 +5,10 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/mnesler/hauk-tui/internal/chat"
 	"github.com/mnesler/hauk-tui/internal/config"
+	"github.com/mnesler/hauk-tui/internal/ui"
 )
 
 // themeItem represents a theme in the list
@@ -61,11 +63,17 @@ func NewModel() Model {
 	vp.SetContent("")
 
 	// Initialize theme list (will be populated when shown)
-	themeList := list.New([]list.Item{}, list.NewDefaultDelegate(), 40, 12)
+	themeList := list.New([]list.Item{}, newThemeDelegate(), 40, 12)
 	themeList.Title = "Select Theme"
 	themeList.SetShowStatusBar(false)
 	themeList.SetFilteringEnabled(false)
 	themeList.SetShowHelp(false)
+
+	// Style the list title with theme colors
+	themeList.Styles.Title = lipgloss.NewStyle().
+		Foreground(ui.ActiveTheme.TextPrimary).
+		Bold(true).
+		Padding(0, 1)
 
 	return Model{
 		chatViewport:      vp,
