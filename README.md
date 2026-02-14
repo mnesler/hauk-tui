@@ -5,17 +5,29 @@ A chat-based TUI for generating mermaid diagrams with LLM assistance.
 ## Features
 
 - **Chat Interface**: Natural conversation with LLM agents
-- **Dual Pane Layout**: Chat on the left, diagram preview on the right
-- **Real-time Preview**: ASCII diagram rendering as you chat
+- **Dual Pane Layout**: Scrollable chat on the left, live application logs on the right
+- **Mouse Support**: Scroll both panes independently with mouse wheel
+- **Application Logs**: Real-time debug and event logging
 - **Multiple LLM Providers**: OpenCode, OpenRouter, Anthropic, GitHub Copilot
 - **Minimalist Design**: No borders, color-based panel separation
-- **Theme Switching**: 6 color themes with live preview and persistent config
+- **Theme Switching**: 8 color themes with live preview and persistent config
 
 ## Installation
 
 ```bash
 go install github.com/mnesler/hauk-tui/cmd/hauk@latest
 ```
+
+### Development Setup
+
+After cloning the repository, install the pre-commit hook for build verification:
+
+```bash
+cp scripts/pre-commit .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+```
+
+This hook automatically verifies that code compiles before allowing commits. See [scripts/README.md](scripts/README.md) for more details.
 
 ## Usage
 
