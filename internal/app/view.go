@@ -75,7 +75,7 @@ func (m Model) renderChatPanel() string {
 	// Check if there are any messages
 	if len(m.messages) == 0 {
 		// Show welcome message
-		welcome := ui.GetTextMutedStyle().
+		welcome := ui.GetTextMutedStyle(ui.ActiveTheme.ChatBg).
 			Padding(2).
 			Render("Welcome to Hauk-TUI!\n\nType a message to start chatting with the agent.\nUse /theme to change themes.")
 		messages = append(messages, welcome)
@@ -142,7 +142,7 @@ func (m Model) renderLogPanel() string {
 	// Format logs for display
 	var logContent string
 	if len(logs) == 0 {
-		logContent = ui.GetTextMutedStyle().
+		logContent = ui.GetTextMutedStyle(ui.ActiveTheme.DiagramBg).
 			Padding(2).
 			Render("Waiting for logs...")
 	} else {
@@ -220,7 +220,7 @@ func (m Model) renderThemeSelector() string {
 	modalHeight := 20
 
 	// Instructions
-	instructions := ui.GetTextMutedStyle().
+	instructions := ui.GetTextMutedStyle(ui.ActiveTheme.ChatBg).
 		Render("↑/↓: navigate • Enter: select • Esc: cancel")
 
 	// List view

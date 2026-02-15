@@ -5,7 +5,7 @@ import "github.com/charmbracelet/lipgloss"
 // GetUserMsgStyle returns the style for user messages
 func GetUserMsgStyle(width int) lipgloss.Style {
 	return lipgloss.NewStyle().
-		Background(ActiveTheme.UserMsgBg).
+		Background(ActiveTheme.ChatBg).
 		Foreground(ActiveTheme.TextPrimary).
 		Padding(1, 2).
 		MarginBottom(1).
@@ -15,7 +15,7 @@ func GetUserMsgStyle(width int) lipgloss.Style {
 // GetAgentMsgStyle returns the style for agent messages
 func GetAgentMsgStyle(width int) lipgloss.Style {
 	return lipgloss.NewStyle().
-		Background(ActiveTheme.AgentMsgBg).
+		Background(ActiveTheme.ChatBg).
 		Foreground(ActiveTheme.TextPrimary).
 		Padding(1, 2).
 		MarginBottom(1).
@@ -72,7 +72,8 @@ func GetTextSecondaryStyle() lipgloss.Style {
 }
 
 // GetTextMutedStyle returns the style for muted text
-func GetTextMutedStyle() lipgloss.Style {
+func GetTextMutedStyle(bg lipgloss.Color) lipgloss.Style {
 	return lipgloss.NewStyle().
-		Foreground(ActiveTheme.TextMuted)
+		Foreground(ActiveTheme.TextMuted).
+		Background(bg)
 }
